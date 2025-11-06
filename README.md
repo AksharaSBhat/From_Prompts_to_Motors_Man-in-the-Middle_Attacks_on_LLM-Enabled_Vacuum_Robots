@@ -3,7 +3,7 @@ This project is a practical implementation based on the research paper [From Pro
 
 It demonstrates how a Man-in-the-Middle (MITM) attacker can intercept and manipulate the communication between an "LLM-enabled robot" and its cloud-based LLM (in this case, Google Gemini) to inject malicious prompts or modify the LLM's responses.
 
-## :warning: Security & Ethics Warning :warning:
+## Security & Ethics Warning
 This project contains code for performing network attacks for educational and research purposes
 ONLY.
 - DO NOT run these scripts on any network or device you do not own or have explicit permission to test.
@@ -46,6 +46,9 @@ source venv/bin/activate
 pip install SpeechRecognition gTTS pygame PyAudio
 pip install ultralytics
 pip install google-genai
+pip install google-generativeai
+pip install google
+pip install python-dotenv
 ```
 
 ## Configuration & Usage
@@ -54,6 +57,8 @@ Follow these steps to set up and run the simulation.
 The robot script ( `query-gemini.py` ) requires a Google Gemini API key.
 Set this key as an environment variable in your terminal:
 `export GEMINI_API_KEY="YOUR_API_KEY_HERE"`
+You should the following line to you shell's run-commands file and restart the shell.
+`export GRPC_DEFAULT_SSL_ROOTS_FILE_PATH="/etc/ssl/certs/ca-certificates.crt"`
 
 ### 2. Configure the "Attacker" Proxy
 The `mitmproxy-addon.py` script is used to define the attack scenarios. Look into the mitmproxy [documentation](https://docs.mitmproxy.org/stable/api/mitmproxy/http.html) on different event hooks and modify the script accordinlgy for a custom attack.
@@ -64,7 +69,7 @@ attacker, one for the robot).
 #### Step A: On the Attacker Machine
 1. Start mitmproxy with the addon script. This will launch the proxy server (usually on port 8080)
 and its console interface.
-    `mitmproxy -s mitmproxy-addon.py`
+    `mitmproxy --mode transparent -s mitmproxy-addon.py --set scenario="your desired scenario from the paper"`
 
 #### Step B: On the "Robot" Machine
 1. **Route Traffic Through the Proxy:** You must configure this machine to send all its internet traffic through the `mitmproxy` instance.
