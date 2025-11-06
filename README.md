@@ -62,6 +62,7 @@ You should the following line to you shell's run-commands file and restart the s
 
 ### 2. Configure the "Attacker" Proxy
 The `mitmproxy-addon.py` script is used to define the attack scenarios. Look into the mitmproxy [documentation](https://docs.mitmproxy.org/stable/api/mitmproxy/http.html) on different event hooks and modify the script accordinlgy for a custom attack.
+Use any arpspoofing tool like ettercap to begin "man-in-the-middle" attack.
 
 ### 3. Run the Attack Simulation
 You will need two separate terminal windows, ideally on two separate machines or VMs (one for the
