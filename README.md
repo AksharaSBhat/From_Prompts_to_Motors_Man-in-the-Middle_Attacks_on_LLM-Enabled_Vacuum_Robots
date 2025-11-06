@@ -13,11 +13,11 @@ ONLY.
 ## Project Overview
 This implementation consists of two main parts:
 
-1. **The "Robot" Client ( `query-gemini.py` ):** This script simulates the robot. It uses the microphone to listen for voice commands (e.g., "start cleaning") and the webcam to detect objects (e.g., "cat", "dog") using YOLOv8. It sends this information as prompts to the Google Gemini API and "acts" on the JSON response it receives.
-2. **The "Attacker" Proxy ( `mitmproxy-addon.py` ):** This is an addon script for mitmproxy. It intercepts all traffic between the "robot" and the Google API. Based on the attack scenario, it can modify outgoing prompts (Prompt Injection) or incoming responses (Output Manipulation) in real-time.
+1. **The "Robot" Client (`client.py`):** This script simulates the robot. It uses the microphone to listen for voice commands (e.g., "start cleaning") and the webcam to detect objects (e.g., "cat", "dog") using YOLOv8. It sends this information as prompts to the Google Gemini API and "acts" on the JSON response it receives. It also handles voice commands and gives voice responses.
+2. **The "Attacker" Proxy (`mitmproxy-addon.py`):** This is an addon script for mitmproxy. It intercepts all traffic between the "robot" and the Google API. Based on the attack scenario, it can modify outgoing prompts (Prompt Injection) or incoming responses (Output Manipulation) in real-time.
 
 ## Project Files
-- `query-gemini.py` : The main client script for the "robot".
+- `client.py` : The main client script for the "robot".
 - `audio_handler.py` : A helper module for handling speech-to-text and text-to-speech.
 - `mitmproxy-addon.py` : The attacker's addon script for mitmproxy.
 - `From_Prompts_to_Motors...pdf` : The original research paper.
@@ -54,8 +54,8 @@ pip install python-dotenv
 ## Configuration & Usage
 Follow these steps to set up and run the simulation.
 ### 1. Configure the "Robot" Client
-The robot script ( `query-gemini.py` ) requires a Google Gemini API key.
-Set this key as an environment variable in your terminal:
+The robot script (`client.py`) requires a Google Gemini API key.
+Set this key as an environment variable in your terminal (or in a `.env` file):
 `export GEMINI_API_KEY="YOUR_API_KEY_HERE"`
 You should the following line to you shell's run-commands file and restart the shell.
 `export GRPC_DEFAULT_SSL_ROOTS_FILE_PATH="/etc/ssl/certs/ca-certificates.crt"`
@@ -83,8 +83,6 @@ and its console interface.
    - With the proxy running, visit `http://mitm.it` in a browser on the robot machine.
    - Follow the instructions to download and install the certificate for your operating system.
 
----
-
 ### Step C: Run the Robot Client
 
 1. Once the proxy is set up and the certificate is installed, go to the terminal on the robot machine.  
@@ -95,12 +93,12 @@ and its console interface.
    source venv/bin/activate
     ```
 4. Run the robot script:
-`python query-gemini.py`
+`python client.py`
 
 **Observe the Attack**
-The Attacker's Terminal (running mitmproxy ) will show all intercepted network traffic. You will
+The Attacker's Terminal (running mitmproxy) will show all intercepted network traffic. You will
 see the mitmproxy-addon.py script printing messages as it modifies requests or responses.
-The Robot's Terminal (running query-gemini.py ) will show the result of the attack. You will see it receive manipulated commands (e.g., "I just ran over the cat.") instead of the real ones.
+The Robot's Terminal (running `client.py`) will show the result of the attack. You will see it receive manipulated commands (e.g., "I just ran over the cat.") instead of the real ones.
 
 ## License
 This project is provided for academic and research purposes. Please consider adding an open-source license (e.g., MIT) if you plan to distribute or build upon this work.
